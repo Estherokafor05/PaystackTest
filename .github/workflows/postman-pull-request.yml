@@ -24,8 +24,12 @@ jobs:
     - name: Run POSTMAN collection
       run: |
         echo "::set-env name=runOutput:: $(newman run ./tests/regression-test-suite.postman_collection.json -e ./tests/test.postman_environment.json --reporters cli,json --reporter-json-export output.json)"
+      env:
+        ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
         
     # Runs a set of commands using the runners shell
     - name: Echo Response
       run: |
         echo ${{env.runOutput}},
+      env:
+        ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
