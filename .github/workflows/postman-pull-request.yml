@@ -11,7 +11,7 @@ jobs:
     - uses: actions/checkout@v2
       
     - name: Install Node
-      uses: actions/setup-node@v1
+      uses: actions/setup-node@v1.4.4
       with: 
         node-version: '12.x'
         
@@ -23,7 +23,7 @@ jobs:
       
     - name: Run POSTMAN collection
       run: |
-        echo "::set-env name=runOutput:: $(newman run ./src/tests/regression-test-suite.postman_collection.json -e ./tests/test.postman_environment.json --reporters cli,json --reporter-json-export output.json)"
+        echo "::set-env name=runOutput:: $(newman run ./tests/regression-test-suite.postman_collection.json -e ./tests/test.postman_environment.json --reporters cli,json --reporter-json-export output.json)"
         
     # Runs a set of commands using the runners shell
     - name: Echo Response
