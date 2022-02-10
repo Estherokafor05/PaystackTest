@@ -1,0 +1,324 @@
+{
+	"info": {
+		"_postman_id": "fada2da1-d1f3-4f5c-925d-7d318ada398e",
+		"name": "Regression Test Suite",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Verify response Data",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const jsonData = pm.response.json();",
+							"pm.test(\"Test data type of the response\", () => {",
+							"  pm.expect(jsonData).to.be.an(\"object\");",
+							"  pm.expect(jsonData.name).to.eql(\"Yavin IV\");",
+							"  pm.expect(jsonData.rotation_period).to.eql(\"24\");",
+							"  pm.expect(jsonData.orbital_period).to.eql(\"4818\");",
+							"  pm.expect(jsonData.diameter).to.eql(\"10200\");",
+							"  pm.expect(jsonData.climate).to.eql(\"temperate, tropical\");",
+							"  pm.expect(jsonData.gravity).to.eql(\"1 standard\");",
+							"  pm.expect(jsonData.terrain).to.eql(\"jungle, rainforests\");",
+							"  pm.expect(jsonData.surface_water).to.eql(\"8\");",
+							"  pm.expect(jsonData.population).to.eql(\"1000\");",
+							"  pm.expect(jsonData.residents).to.eql([]);",
+							"  pm.expect(jsonData.films).to.be.a(\"array\");",
+							"  pm.expect(jsonData.created).to.be.a(\"string\");",
+							"  pm.expect(jsonData.edited).to.be.a(\"string\");",
+							"  pm.expect(jsonData.url).to.be.a(\"string\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseurl}}{{api_path}}",
+					"host": [
+						"{{baseurl}}{{api_path}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Verify JSON schema",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var schema = {",
+							"      \"type\": \"object\",",
+							"      \"properties\": {",
+							"        \"name\": {",
+							"          \"type\": \"string\"",
+							"        },",
+							"        \"data.rotation_period\": {",
+							"          \"type\": \"integer\"",
+							"        },",
+							"        \"data.orbital_period\": {",
+							"          \"type\": \"integer\"",
+							"        },",
+							"        \"diamater\": {",
+							"          \"type\": \"integer\"",
+							"        },",
+							"        \"climate\": {",
+							"          \"type\": \"string\"",
+							"        },",
+							"        \"gravity\": {",
+							"            \"type\": \"string\"",
+							"        },",
+							"        \"terrain\": {",
+							"            \"type\": \"string\"",
+							"        },",
+							"        \"data.surface_water\": {",
+							"            \"type\": \"integer\"",
+							"        },",
+							"        \"data.population\": {",
+							"            \"type\": \"integer\"",
+							"        },",
+							"        \"residents\": {",
+							"            \"type\": \"array\"",
+							"        },",
+							"        \"data.films\": {",
+							"            \"type\": \"string\"",
+							"        },",
+							"        \"created\": {",
+							"            \"type\": \"string\"",
+							"        },",
+							"        \"edited\": {",
+							"            \"type\": \"string\"",
+							"        },",
+							"        \"url\": {",
+							"            \"type\": \"string\"",
+							"        }",
+							"      },",
+							"      \"required\": [",
+							"       \"name\",",
+							"    \"rotation_period\",",
+							"    \"orbital_period\",",
+							"    \"diameter\",",
+							"    \"climate\",",
+							"    \"gravity\",",
+							"    \"terrain\",",
+							"    \"surface_water\",",
+							"    \"population\",",
+							"    \"residents\",",
+							"    \"films\",",
+							"    \"created\",",
+							"    \"edited\",",
+							"    \"url\"",
+							"      ]",
+							"    }",
+							"pm.test(\"Validate schema\", () => {",
+							"pm.response.to.have.jsonSchema(schema);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseurl}}{{api_path}}",
+					"host": [
+						"{{baseurl}}{{api_path}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Verify response time does not exceed 3ms",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response time is less than 300ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(3000);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseurl}}{{api_path}}",
+					"host": [
+						"{{baseurl}}{{api_path}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST negative test",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"verify status code is 405\", function () {\r",
+							"    pm.response.to.have.status(405);\r",
+							"});\r",
+							"pm.test(\"Request response body\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.detail).to.eql(\"Method 'POST' not allowed.\")\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Automated testing\",\r\n    \"Completed\": true\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseurl}}{{api_path}}",
+					"host": [
+						"{{baseurl}}{{api_path}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Verify response headers",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Verify response headers keys are present \", () => {",
+							"    pm.response.to.have.header(\"server\");",
+							"    pm.response.to.have.header(\"Date\");",
+							"    pm.response.to.have.header(\"Content-Type\");",
+							"    pm.response.to.have.header(\"Transfer-Encoding\");",
+							"    pm.response.to.have.header(\"Connection\");",
+							"    pm.response.to.have.header(\"Vary\");",
+							"    pm.response.to.have.header(\"X-Frame-Options\");",
+							"    pm.response.to.have.header(\"ETag\");",
+							"    pm.response.to.have.header(\"Allow\");",
+							"    pm.response.to.have.header(\"Strict-Transport-Security\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseurl}}{{api_path}}",
+					"host": [
+						"{{baseurl}}{{api_path}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "mock name change",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Request response name\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"   pm.expect(jsonData.name).to.eql(\"Esther Okafor\")\r",
+							"\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/api/planets/3/",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"planets",
+						"3",
+						""
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Test",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/planets/3/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"planets",
+								"3",
+								""
+							]
+						}
+					},
+					"code": 200,
+					"_postman_previewlanguage": null,
+					"header": null,
+					"cookie": [],
+					"body": "{\n    \"name\": \"Esther Okafor\",\n    \"rotation_period\": \"24\",\n    \"orbital_period\": \"4818\",\n    \"diameter\": \"10200\",\n    \"climate\": \"temperate, tropical\",\n    \"gravity\": \"1 standard\",\n    \"terrain\": \"jungle, rainforests\",\n    \"surface_water\": \"8\",\n    \"population\": \"1000\",\n    \"residents\": [],\n    \"films\": [\n        \"https://swapi.dev/api/films/1/\"\n    ],\n    \"created\": \"2014-12-10T11:37:19.144000Z\",\n    \"edited\": \"2014-12-20T20:58:18.421000Z\",\n    \"url\": \"https://swapi.dev/api/planets/3/\"\n}"
+				}
+			]
+		}
+	]
+}
